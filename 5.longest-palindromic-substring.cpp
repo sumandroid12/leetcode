@@ -34,39 +34,37 @@
 using namespace std;
 class Solution {
 public:
-    string longestPalindrome(string s) { 
-        string strev = s;
-        reverse(strev.begin(),strev.end());
-        return maxSubstring(s,strev); 
-    }
-    string maxSubstring(string s1,string s2){
-        int m=s1.length();
-        int n=s2.length();
-        int dp[m+1][n+1];
-        for(int i=1;i<m+1;i++){
-            for(int j=1;j<n+1;j++){
-                if(s1[i-1]==s2[j-1])
-                    dp[i][j]=dp[i-1][j-1]+1;
-                else
-                    dp[i][j]=0; 
-            }
+    string longestPalindrome(string s) {
+        pair<int,int> res;
+        if(s.empty() || s.length()==1)
+            return s;
+        int n=s.length();
+        for(int i=0;i<n-1;i++){
+            auto o = expand_around(s,i,i);
+            auto e = expand_around(s,i,i+1);
+            auto curr = o.second > e.second ? o:e; 
+            res = curr.second > res.second ? curr:res;
         }
-        int len=-1,send=-1;
-        for(int i=0;i<m;i++){
-            for(int j=0;j<n;j++){ 
-                if(dp[i][j]>len){
-                    len = dp[i][j]; 
-                    send = i; 
-                } 
-            }
-        } 
-        return s1.substr(send-len,len);
+        return s.substr(res.first,res.second);
+        
+    }
+    pair<int,int> expand_around(string &s,int l, int r){
+        int n = s.length();
+        while(l >=0 && r <n){
+            if(s[l]!=s[r])
+                break;
+            l--;r++; 
+        }
+        l++;r--;
+        if(s[l]==s[r])
+            return pair<int,int>(l,r-l+1);
+        else
+            return pair<int,int>(l,0);
     }
 };
 
-int main(){
-    Solution sol;
-    string test="cbbd";
-    cout << sol.longestPalindrome(test) << endl;
-    return 0;
-}
+// int main(){
+//     Solution sol;
+//     string s = "a";
+//     cout << sol.longestPalindrome(s) << endl;
+// }
