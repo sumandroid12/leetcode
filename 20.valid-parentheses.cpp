@@ -69,13 +69,11 @@ public:
 
         for(int i=0;i<s.length();i++){
             if(s[i]=='('|| s[i]=='{' ||s[i]=='[')
-            st.emplace(s[i]);
+                st.emplace(s[i]);
             else if(!st.empty() && st.top()==closer[s[i]])
-            st.pop();
+                st.pop();
             else
-            {
                 return false;
-            } 
         }
         return true; 
     }
